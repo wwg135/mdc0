@@ -14,6 +14,7 @@ struct ContentView: View {
     @State private var transparentStatus: String = ""
     @State private var homeBarStatus: String = ""
     @State private var lockscreenIconsStatus: String = ""
+    @State private var appSwitcherBlurStatus: String = ""
     @State private var respringStatus: String = ""
     
     var body: some View {
@@ -160,8 +161,46 @@ struct ContentView: View {
                     }
                     .foregroundColor(.white)
                     .listRowBackground(Color.cyan)
+                    
+                    VStack(alignment: .leading) {
+                        Button("Remove App Switcher Blur", systemImage: "square.stack.fill") {
+                            // Process app switcher blur files
+                            let paths = [
+                                "/System/Library/PrivateFrameworks/SpringBoard.framework/homeScreenBackdrop-application.materialrecipe",
+                                "/System/Library/PrivateFrameworks/SpringBoard.framework/homeScreenBackdrop-switcher.materialrecipe"
+                            ]
+                            
+                            var successCount = 0
+                            for filePath in paths {
+                                let path = strdup(filePath)
+                                let result = poc(path)
+                                if result == 0 {
+                                    successCount += 1
+                                }
+                                free(path)
+                            }
+                            
+                            appSwitcherBlurStatus = "Success: \(successCount)/\(paths.count) files processed"
+                            Drops.show(Drop(title: "Remove App Switcher Blur", subtitle: appSwitcherBlurStatus, icon: UIImage(systemName: "square.stack.fill")))
+                        }
+                        .symbolRenderingMode(.hierarchical)
+                        HStack {
+                                Text("App Switcher Blur Status")
+                                .foregroundStyle(.white)
+                                Spacer()
+                            Circle()
+                                .frame(width: 10, height: 10)
+                                .foregroundColor(appSwitcherBlurStatus.isEmpty ? Color(uiColor: .lightGray) : appSwitcherBlurStatus.contains("Success") ? Color.green : Color.red)
+                                .background {
+                                    Circle()
+                                        .stroke(.white, lineWidth: 3)
+                                }
+                        }
+                    }
+                    .foregroundColor(.white)
+                    .listRowBackground(Color.indigo)
                 }
-                Section("Colors") {
+                Section("Status") {
                     HStack {
                         Text("None")
                             .foregroundStyle(.white)
@@ -203,7 +242,7 @@ struct ContentView: View {
 
                 Section {
                     // Credit
-                    Text("Using CVE-2025-24203 and my old mdc/kfd stuff\nSupport iOS 15.0 - 18.3.2, you need to respring by hand to take effect using Library trick")
+                    Text("Made by [34306](https://github.com/34306), UI by [timi2506](https://github.com/timi2506), using CVE-2025-24203 by Ian Beer and my old mdc/kfd stuff\nSupport iOS 15.0 - 18.3.2, you need to respring by hand to take effect using Library trick or using [this app](https://github.com/34306/mdc0/releases/download/1.0/respringapp.ipa) thanks to Thea")
                         .font(.caption)
                         .foregroundColor(.gray)
                 }
