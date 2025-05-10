@@ -9,18 +9,55 @@ import SwiftUI
 import Drops
 import notify
 
-func toggleLiquidDetectionIcon(isEnabled: Bool) {
-    if isEnabled {
-        UIStatusBarServer.addStatusBarItem(40)
+// Check if the device is running iOS 17 or later
+func isIOS17OrLater() -> Bool {
+    if #available(iOS 17.0, *) {
+        return true
+    }
+    return false
+}
+
+// Function to toggle liquid detection icon (iOS 16 only)
+func toggleLiquidDetectionIcon(isEnabled: Bool) -> Bool {
+    // Liquid detection status bar item number
+    let liquidDetectionItemNumber: Int32 = 40
+    
+    if isIOS17OrLater() {
+        // Not supported on iOS 17+
+        return false
     } else {
-        UIStatusBarServer.removeStatusBarItem(40)
+        // iOS 16 implementation using UIStatusBarServer
+        if isEnabled {
+            UIStatusBarServer.addStatusBarItem(liquidDetectionItemNumber)
+        } else {
+            UIStatusBarServer.removeStatusBarItem(liquidDetectionItemNumber)
+        }
+        return true // Feature supported on iOS 16
     }
 }
-func applyStatusBarStyleOverride(value: Int32) {
-    UIStatusBarServer.addStyleOverrides(value)
+
+// Function to apply style overrides (iOS 16 only)
+func applyStatusBarStyleOverride(value: Int32) -> Bool {
+    if isIOS17OrLater() {
+        // Not supported on iOS 17+
+        return false
+    } else {
+        // iOS 16 implementation using UIStatusBarServer
+        UIStatusBarServer.addStyleOverrides(value)
+        return true // Feature supported on iOS 16
+    }
 }
-func removeStatusBarStyleOverride(value: Int32) {
-    UIStatusBarServer.removeStyleOverrides(value)
+
+// Function to remove style overrides (iOS 16 only)
+func removeStatusBarStyleOverride(value: Int32) -> Bool {
+    if isIOS17OrLater() {
+        // Not supported on iOS 17+
+        return false
+    } else {
+        // iOS 16 implementation using UIStatusBarServer
+        UIStatusBarServer.removeStyleOverrides(value)
+        return true // Feature supported on iOS 16
+    }
 }
 
 struct ContentView: View {
@@ -338,22 +375,32 @@ struct ContentView: View {
                     .listRowBackground(Color.pink)
                     
                     VStack(alignment: .leading) {
-                        Text("Works on iOS 16.0 - 18.2, kill this app make it disappear")
+                        Text(isIOS17OrLater() ? "Not supported on iOS 17+" : "Works on iOS 16.0 - 16.7.10, kill this app makes it disappear")
                             .font(.caption)
                             .foregroundColor(.white)
                             .padding(.bottom, 5)
                         
                         Button(liquidDetectionStatus == "Enabled" ? "Disable Liquid Detection Icon" : "Enable Liquid Detection Icon", systemImage: liquidDetectionStatus == "Enabled" ? "drop" : "drop.fill") {
                             let newStatus = liquidDetectionStatus != "Enabled" ? "Enabled" : "Disabled"
-                            liquidDetectionStatus = newStatus
                             
-                            toggleLiquidDetectionIcon(isEnabled: newStatus == "Enabled")
+                            // Check if feature is supported on this iOS version
+                            let isSupported = toggleLiquidDetectionIcon(isEnabled: newStatus == "Enabled")
                             
-                            Drops.show(Drop(
-                                title: "Liquid Detection", 
-                                subtitle: newStatus == "Enabled" ? "Icon enabled" : "Icon disabled", 
-                                icon: UIImage(systemName: newStatus == "Enabled" ? "drop.fill" : "drop")
-                            ))
+                            if isSupported {
+                                liquidDetectionStatus = newStatus
+                                Drops.show(Drop(
+                                    title: "Liquid Detection", 
+                                    subtitle: newStatus == "Enabled" ? "Icon enabled" : "Icon disabled", 
+                                    icon: UIImage(systemName: newStatus == "Enabled" ? "drop.fill" : "drop")
+                                ))
+                            } else {
+                                // Show unsupported message for iOS 17+
+                                Drops.show(Drop(
+                                    title: "Liquid Detection", 
+                                    subtitle: "Not supported on iOS 17+", 
+                                    icon: UIImage(systemName: "exclamationmark.triangle")
+                                ))
+                            }
                         }
                         .symbolRenderingMode(.hierarchical)
                         
@@ -374,7 +421,7 @@ struct ContentView: View {
                     .listRowBackground(Color.blue)
                     
                     VStack(alignment: .leading) {
-                        Text("Works on iOS 16.0 - 18.2, kill this app to remove")
+                        Text(isIOS17OrLater() ? "Not supported on iOS 17+" : "Works on iOS 16.0 - 16.7.10, kill this app to remove")
                             .font(.caption)
                             .foregroundColor(.white)
                             .padding(.bottom, 5)
@@ -407,21 +454,31 @@ struct ContentView: View {
                         HStack {
                             Button(statusBarOverrideStatus == "Enabled" ? "Disable Status Bar Override" : "Enable Status Bar Override", systemImage: statusBarOverrideStatus == "Enabled" ? "xmark.circle" : "checkmark.circle") {
                                 let newStatus = statusBarOverrideStatus != "Enabled" ? "Enabled" : "Disabled"
-                                statusBarOverrideStatus = newStatus
-                                
                                 let valueToUse = selectedOverrideValue == -1 ? (Int32(customOverrideValue) ?? 0) : selectedOverrideValue
                                 
+                                // Check if feature is supported on this iOS version
+                                let isSupported: Bool
                                 if newStatus == "Enabled" {
-                                    applyStatusBarStyleOverride(value: valueToUse)
+                                    isSupported = applyStatusBarStyleOverride(value: valueToUse)
                                 } else {
-                                    removeStatusBarStyleOverride(value: valueToUse)
+                                    isSupported = removeStatusBarStyleOverride(value: valueToUse)
                                 }
                                 
-                                Drops.show(Drop(
-                                    title: "Status Bar Override", 
-                                    subtitle: "\(newStatus) with value: \(valueToUse)", 
-                                    icon: UIImage(systemName: newStatus == "Enabled" ? "checkmark.circle" : "xmark.circle")
-                                ))
+                                if isSupported {
+                                    statusBarOverrideStatus = newStatus
+                                    Drops.show(Drop(
+                                        title: "Status Bar Override", 
+                                        subtitle: "\(newStatus) with value: \(valueToUse)", 
+                                        icon: UIImage(systemName: newStatus == "Enabled" ? "checkmark.circle" : "xmark.circle")
+                                    ))
+                                } else {
+                                    // Show unsupported message for iOS 17+
+                                    Drops.show(Drop(
+                                        title: "Status Bar Override", 
+                                        subtitle: "Not supported on iOS 17+", 
+                                        icon: UIImage(systemName: "exclamationmark.triangle")
+                                    ))
+                                }
                             }
                             .symbolRenderingMode(.hierarchical)
                             .frame(maxWidth: .infinity)

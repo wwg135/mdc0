@@ -8,7 +8,7 @@
 int poc(char *path);
 int backboard_respring(void);
 
-// UIStatusBarServer private API declaration
+// UIStatusBarServer private API declaration (iOS 16)
 @interface UIStatusBarServer : NSObject
 + (void)addStatusBarItem:(int32_t)arg1;
 + (void)removeStatusBarItem:(int32_t)arg1;
