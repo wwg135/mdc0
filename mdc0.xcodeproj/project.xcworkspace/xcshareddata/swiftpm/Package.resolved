@@ -1,0 +1,15 @@
+{
+  "originHash" : "124d6e8f73749f32eb22934dbfd80fb8dda299ab82d6ec5b1d48430e953a6c1c",
+  "pins" : [
+    {
+      "identity" : "drops",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/omaralbeik/Drops.git",
+      "state" : {
+        "revision" : "a183ee6f79f21c940092a19c2cba756555422371",
+        "version" : "1.7.0"
+      }
+    }
+  ],
+  "version" : 3
+}
