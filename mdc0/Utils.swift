@@ -2,7 +2,7 @@
 //  Utils.swift
 //  mdc0
 //
-//  Created by straight-tamago☆ on 2025/05/12.
+//  Created by straight-tamago⭐️ on 2025/05/12.
 //
 
 import Foundation
@@ -86,4 +86,11 @@ func isAllZero(path: String) -> Bool {
     }
 
     return true
+}
+
+func terminateApp() {
+    UIControl().sendAction(#selector(URLSessionTask.suspend), to: UIApplication.shared, for: nil)
+    Timer.scheduledTimer(withTimeInterval: 0.2, repeats: false) { _ in
+        exit(0)
+    }
 }

@@ -2,7 +2,7 @@
 //  PasscodeTheme.swift
 //  mdc0
 //
-//  Created by straight-tamago☆ on 2025/05/12.
+//  Created by straight-tamago⭐️ on 2025/05/12.
 //
 
 import SwiftUI
@@ -47,7 +47,6 @@ struct RemovePasscodeThemeView: View {
                 .symbolRenderingMode(.hierarchical)
 
                 Spacer()
-
                 ActionStatusCircle(status: passcodeThemeStatus)
             }
         }

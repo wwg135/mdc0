@@ -2,7 +2,7 @@
 //  HideHomeBar.swift
 //  mdc0
 //
-//  Created by straight-tamago☆ on 2025/05/12.
+//  Created by straight-tamago⭐️ on 2025/05/12.
 //
 
 import SwiftUI
@@ -22,9 +22,8 @@ struct HideHomeBarView: View {
                 ))
             }
             .buttonStyle(.borderedProminent)
-            
-            Spacer()
 
+            Spacer()
             ActionStatusCircle(status: homeBarStatus)
         }
         .foregroundColor(.primary)

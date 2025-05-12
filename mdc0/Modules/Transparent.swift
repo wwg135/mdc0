@@ -2,7 +2,7 @@
 //  Transparent.swift
 //  mdc0
 //
-//  Created by straight-tamago☆ on 2025/05/12.
+//  Created by straight-tamago⭐️ on 2025/05/12.
 //
 
 import SwiftUI
@@ -34,7 +34,6 @@ struct TransparentView: View {
             .buttonStyle(.borderedProminent)
 
             Spacer()
-
             ActionStatusCircle(status: transparentStatus)
         }
         .foregroundColor(.primary)

@@ -2,7 +2,7 @@
 //  HideDock.swift
 //  mdc0
 //
-//  Created by straight-tamago☆ on 2025/05/12.
+//  Created by straight-tamago⭐️ on 2025/05/12.
 //
 
 import SwiftUI
@@ -26,7 +26,6 @@ struct HideDockView: View {
             .buttonStyle(.borderedProminent)
 
             Spacer()
-
             ActionStatusCircle(status: determineOverallDockStatus())
         }
         .foregroundColor(.primary)

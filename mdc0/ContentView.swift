@@ -2,14 +2,18 @@
 //  ContentView.swift
 //  mdc0
 //
-//  Created by Huy Nguyen on 9/5/25.
+//  Created by Huy Nguyen❤️ on 9/5/25.
 //
 
 import SwiftUI
 import Drops
 import notify
+import CoreLocation 
 
 struct ContentView: View {
+    @State private var locationManager = CLLocationManager()
+    @AppStorage("enableLocationServices") private var enableLocationServices = false
+
     var body: some View {
         NavigationView {
             ScrollView {
@@ -27,6 +31,16 @@ struct ContentView: View {
             }
             .navigationTitle("mdc0")
             .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Toggle("Background Keep", isOn: $enableLocationServices)
+                        .onChange(of: enableLocationServices) { _ in
+                            if enableLocationServices {
+                                locationManager.requestWhenInUseAuthorization()
+                                locationManager.requestAlwaysAuthorization()
+                            }
+                            terminateApp()
+                        }
+                }
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button {
                         UIApplication.shared.open(URL(string: "https://github.com/34306/mdc0")!)
