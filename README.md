@@ -10,6 +10,7 @@ A random custom application for jailed user on iOS 15.0 up to 18.3.2
 - Disable camera shutter sound on J/A or KH/A devices (Restart camera app need to do it again)
 - Remove passcode theme (may not work)
 - The status bar thing (iOS 16 only)
+- Disable call recording notification sound (iOS 18+)
 
 Using CVE-2025-24203 by Ian Beer from Google TAG, this exploit "zero" out all of the files that's read-only in iOS system.
 
@@ -20,6 +21,6 @@ Checking release to download the mdc0 app!
 # Credit
 - Ian Beer for the [exploit](https://project-zero.issues.chromium.org/issues/391518636)
 - My old mdc/kfd stuff
-- [timi2506](https://github.com/timi2506) for the UI
+- [timi2506](https://github.com/timi2506) and [straight-tamago](https://x.com/straight_tamago) for the UI
 - [Thea](https://x.com/nyaathea) for the Respring app
 - [DuyTran](https://github.com/khanhduytran0) for the Liquid status bar and fake status
