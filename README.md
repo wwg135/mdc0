@@ -16,3 +16,10 @@ Using CVE-2025-24203 by Ian Beer from Google TAG, this exploit "zero" out all of
 This app need a side-app to respring, you can download it [here](https://github.com/34306/mdc0/releases/download/1.0/respringapp.ipa)
 
 Checking release to download the mdc0 app!
+
+# Credit
+- Ian Beer for the [exploit](https://project-zero.issues.chromium.org/issues/391518636)
+- My old mdc/kfd stuff
+- [timi2506](https://github.com/timi2506) for the UI
+- [Thea](https://x.com/nyaathea) for the Respring app
+- [DuyTran](https://github.com/khanhduytran0) for the Liquid status bar and fake status
