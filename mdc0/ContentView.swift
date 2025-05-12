@@ -26,6 +26,7 @@ struct ContentView: View {
                 ModuleCard(title: "Remove Passcode Theme", icon: "number.square", backgroundColor: .pink) { RemovePasscodeThemeView() }
                 ModuleCard(title: "Liquid Detection Icon", icon: "drop.degreesign.fill", backgroundColor: .blue) { LiquidDetectionView() }
                 ModuleCard(title: "Status Bar Override", icon: "menubar.rectangle", backgroundColor: .green) { StatusBarOverrideView() }
+                ModuleCard(title: "Disable Call Record Notice Sound", icon: "phone.connection.fill", backgroundColor: .brown) { DisableCallRecordNoticeView() }
                 ModuleCard(title: "Status Legend", icon: "list.star", backgroundColor: .teal) { StatusView() }
                 ModuleCard(title: "Credits", icon: "info.bubble", backgroundColor: .gray) { CreditView() }
             }
