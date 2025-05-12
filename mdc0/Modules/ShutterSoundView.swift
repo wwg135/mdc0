@@ -48,12 +48,12 @@ struct ShutterSoundView: View {
                 ActionStatusCircle(status: cameraShutterSoundStatus)
             }
 
-            Toggle("Background Keep", isOn: $LocShutterSound)
+            Toggle("Background Keep (Interval 60s)", isOn: $LocShutterSound)
             .disabled(!UserDefaults.standard.bool(forKey: "enableLocationServices"))
         }
         .foregroundColor(.primary)
         .onAppear {
-            timer = Timer.scheduledTimer(withTimeInterval: 5, repeats: true) { _ in
+            timer = Timer.scheduledTimer(withTimeInterval: 60, repeats: true) { _ in
                 if LocShutterSound && UserDefaults.standard.bool(forKey: "enableLocationServices") {
                     applyChanges()
                 }
