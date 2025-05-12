@@ -8,12 +8,12 @@
 import SwiftUI
 import Drops
 
-struct LockscreenIcon: View {
+struct LockscreenIconView: View {
     @State private var lockscreenIconsStatus: String = ""
     
     var body: some View {
-        VStack(alignment: .leading) {
-            Button("Hide LS Flash & Camera", systemImage: "bolt.slash.fill") {
+        HStack {
+            Button("Apply") {
                 lockscreenIconsStatus = execFile("/System/Library/PrivateFrameworks/CoverSheet.framework/Assets.car") ? "Success" : "Failed"
                 Drops.show(Drop(
                     title: "Hide LS Flash & Camera",
@@ -21,15 +21,12 @@ struct LockscreenIcon: View {
                     icon: UIImage(systemName: "bolt.slash.fill")
                 ))
             }
-            .symbolRenderingMode(.hierarchical)
+            .buttonStyle(.borderedProminent)
 
-            statusRow(label: "Lockscreen Icon Status", status: lockscreenIconsStatus)
+            Spacer()
+
+            ActionStatusCircle(status: lockscreenIconsStatus)
         }
-        .foregroundColor(.white)
-        .listRowBackground(Color.cyan)
+        .foregroundColor(.primary)
     }
-}
-
-#Preview {
-    LockscreenIcon()
 }

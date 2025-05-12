@@ -8,12 +8,12 @@
 import SwiftUI
 import Drops
 
-struct Transparent: View {
+struct TransparentView: View {
     @State private var transparentStatus: String = ""
     
     var body: some View {
-        VStack(alignment: .leading) {
-            Button("Transparent Noti & Media Player", systemImage: "square.stack.3d.forward.dottedline") {
+        HStack {
+            Button("Apply") {
                 let paths = [
                     "/System/Library/PrivateFrameworks/CoreMaterial.framework/platterStrokeLight.visualstyleset",
                     "/System/Library/PrivateFrameworks/CoreMaterial.framework/platterStrokeDark.visualstyleset",
@@ -29,16 +29,14 @@ struct Transparent: View {
                     subtitle: transparentStatus,
                     icon: UIImage(systemName: "square.stack.3d.forward.dottedline")
                 ))
+                transparentStatus = successCount == paths.count ? "Success" : "Failed"
             }
-            Divider()
-            statusRow(label: "Transparent Status", status: transparentStatus)
-        }
-        .foregroundColor(.white)
-        .listRowBackground(Color.purple)
-        
-    }
-}
+            .buttonStyle(.borderedProminent)
 
-#Preview {
-    Transparent()
+            Spacer()
+
+            ActionStatusCircle(status: transparentStatus)
+        }
+        .foregroundColor(.primary)
+    }
 }

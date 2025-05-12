@@ -7,48 +7,52 @@
 
 import SwiftUI
 
-struct Status: View {
+struct ActionStatusCircle: View {
+    var status: String
+
     var body: some View {
-        Section("Status") {
-            HStack {
-                Text("None")
-                    .foregroundStyle(.white)
-                Spacer()
+        Circle()
+            .frame(width: 10, height: 10)
+            .foregroundColor(color(for: status))
+            .background {
                 Circle()
-                    .frame(width: 10, height: 10)
-                    .foregroundColor(Color(uiColor: .lightGray))
-                    .background {
-                        Circle()
-                            .stroke(.white, lineWidth: 3)
-                    }
+                    .stroke(.primary, lineWidth: 3)
             }
-            HStack {
-                Text("Success")
-                    .foregroundStyle(.white)
-                Spacer()
-                Circle()
-                    .frame(width: 10, height: 10)
-                    .foregroundColor(.green)
-                    .background {
-                        Circle()
-                            .stroke(.white, lineWidth: 3)
-                    }
-            }
-            HStack {
-                Text("Failed")
-                    .foregroundStyle(.white)
-                Spacer()
-                Circle()
-                    .frame(width: 10, height: 10)
-                    .foregroundColor(.red)
-                    .background {
-                        Circle()
-                            .stroke(.white, lineWidth: 3)
-                    }
-            }
+    }
+
+    private func color(for status: String) -> Color {
+        switch status {
+        case "Success":
+            return .green
+        case "Failed":
+            return .red
+        default:
+            return Color(uiColor: .lightGray)
         }
-        .listRowBackground(Color.teal)
     }
 }
 
-
+struct StatusView: View {
+    var body: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            HStack {
+                Text("None")
+                    .foregroundStyle(.primary)
+                Spacer()
+                ActionStatusCircle(status: "")
+            }
+            HStack {
+                Text("Success")
+                    .foregroundStyle(.primary)
+                Spacer()
+                ActionStatusCircle(status: "Success")
+            }
+            HStack {
+                Text("Failed")
+                    .foregroundStyle(.primary)
+                Spacer()
+                ActionStatusCircle(status: "Failed")
+            }
+        }
+    }
+}

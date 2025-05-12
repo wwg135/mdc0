@@ -8,12 +8,12 @@
 import SwiftUI
 import Drops
 
-struct HideHomeBar: View {
+struct HideHomeBarView: View {
     @State private var homeBarStatus: String = ""
     
     var body: some View {
-        VStack(alignment: .leading) {
-            Button("Hide Home Bar", systemImage: "arrow.down.to.line.compact") {
+        HStack() {
+            Button("Apply") {
                 homeBarStatus = execFile("/System/Library/PrivateFrameworks/MaterialKit.framework/Assets.car") ? "Success" : "Failed"
                 Drops.show(Drop(
                     title: "Hide Home Bar",
@@ -21,14 +21,12 @@ struct HideHomeBar: View {
                     icon: UIImage(systemName: "arrow.down.to.line.compact")
                 ))
             }
-            Divider()
-            statusRow(label: "Home Bar Hiding Status", status: homeBarStatus)
-        }
-        .foregroundColor(.white)
-        .listRowBackground(Color.orange)
-    }
-}
+            .buttonStyle(.borderedProminent)
+            
+            Spacer()
 
-#Preview {
-    HideHomeBar()
+            ActionStatusCircle(status: homeBarStatus)
+        }
+        .foregroundColor(.primary)
+    }
 }

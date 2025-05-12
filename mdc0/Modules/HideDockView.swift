@@ -8,13 +8,13 @@
 import SwiftUI
 import Drops
 
-struct HideDock: View {
+struct HideDockView: View {
     @State private var darkDockStatus: String = ""
     @State private var lightDockStatus: String = ""
     
     var body: some View {
-        VStack(alignment: .leading) {
-            Button("Hide Dock", systemImage: "dock.rectangle") {
+        HStack {
+            Button("Apply") {
                 darkDockStatus = execFile("/System/Library/PrivateFrameworks/CoreMaterial.framework/dockDark.materialrecipe") ? "Success" : "Failed"
                 lightDockStatus = execFile("/System/Library/PrivateFrameworks/CoreMaterial.framework/dockLight.materialrecipe") ? "Success" : "Failed"
                 Drops.show(Drop(
@@ -23,15 +23,25 @@ struct HideDock: View {
                     icon: UIImage(systemName: "dock.rectangle")
                 ))
             }
-            Divider()
-            statusRow(label: "Dark Dock Status", status: darkDockStatus)
-            statusRow(label: "Light Dock Status", status: lightDockStatus)
-        }
-        .foregroundStyle(.white)
-        .listRowBackground(Color.blue)
-    }
-}
+            .buttonStyle(.borderedProminent)
 
-#Preview {
-    HideDock()
+            Spacer()
+
+            ActionStatusCircle(status: determineOverallDockStatus())
+        }
+        .foregroundColor(.primary)
+    }
+
+    private func determineOverallDockStatus() -> String {
+        if darkDockStatus.isEmpty && lightDockStatus.isEmpty {
+            return ""
+        }
+        if darkDockStatus == "Success" && lightDockStatus == "Success" {
+            return "Success"
+        }
+        if darkDockStatus == "Failed" || lightDockStatus == "Failed" || (darkDockStatus == "Success" && lightDockStatus.isEmpty) || (lightDockStatus == "Success" && darkDockStatus.isEmpty) {
+            return "Failed"
+        }
+        return "" 
+    }
 }

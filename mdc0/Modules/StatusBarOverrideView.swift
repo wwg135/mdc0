@@ -8,22 +8,22 @@
 import SwiftUI
 import Drops
 
-struct StatusBar: View {
+struct StatusBarOverrideView: View {
     @State private var statusBarOverrideStatus: String = ""
     @State private var customOverrideValue: String = ""
     @State private var selectedOverrideValue: Int32 = 2147483647
     @State private var showingOverrideOptions: Bool = false
     
     var body: some View {
-        VStack(alignment: .leading) {
+        VStack(alignment: .leading, spacing: 10) {
             Text(isIOS17OrLater() ? "Not supported on iOS 17+" : "Works on iOS 16.0 - 16.7.10, kill this app to remove")
                 .font(.caption)
-                .foregroundColor(.white)
+                .foregroundColor(.secondary)
                 .padding(.bottom, 5)
             
             HStack {
                 Picker("Status Bar Override", selection: $selectedOverrideValue) {
-                    Text("UNKNOWN GOD").tag(Int32(2147483647)) // INT_MAX
+                    Text("UNKNOWN GOD").tag(Int32(2147483647))
                     Text("Calling").tag(Int32(1))
                     Text("Microphone").tag(Int32(4))
                     Text("FaceTime").tag(Int32(16))
@@ -34,8 +34,8 @@ struct StatusBar: View {
                     Text("Custom").tag(Int32(-1))
                 }
                 .pickerStyle(MenuPickerStyle())
-                .foregroundColor(.white)
-                .accentColor(.white)
+                .foregroundColor(.primary)
+                .accentColor(.primary)
                 .frame(maxWidth: .infinity)
                 
                 if selectedOverrideValue == -1 {
@@ -47,11 +47,10 @@ struct StatusBar: View {
             }
             
             HStack {
-                Button(statusBarOverrideStatus == "Enabled" ? "Disable Status Bar Override" : "Enable Status Bar Override", systemImage: statusBarOverrideStatus == "Enabled" ? "xmark.circle" : "checkmark.circle") {
+                Button(statusBarOverrideStatus == "Enabled" ? "Disable" : "Enable", systemImage: statusBarOverrideStatus == "Enabled" ? "xmark.circle" : "checkmark.circle") {
                     let newStatus = statusBarOverrideStatus != "Enabled" ? "Enabled" : "Disabled"
                     let valueToUse = selectedOverrideValue == -1 ? (Int32(customOverrideValue) ?? 0) : selectedOverrideValue
                     
-                    // Check if feature is supported on this iOS version
                     let isSupported: Bool
                     if newStatus == "Enabled" {
                         isSupported = applyStatusBarStyleOverride(value: valueToUse)
@@ -67,7 +66,6 @@ struct StatusBar: View {
                             icon: UIImage(systemName: newStatus == "Enabled" ? "checkmark.circle" : "xmark.circle")
                         ))
                     } else {
-                        // Show unsupported message for iOS 17+
                         Drops.show(Drop(
                             title: "Status Bar Override",
                             subtitle: "Not supported on iOS 17+",
@@ -75,17 +73,14 @@ struct StatusBar: View {
                         ))
                     }
                 }
+                .buttonStyle(.borderedProminent)
                 .symbolRenderingMode(.hierarchical)
-                .frame(maxWidth: .infinity)
-            }
-            
-            statusRow(label: "Status Bar Override Status", status: statusBarOverrideStatus)
-        }
-        .foregroundColor(.white)
-        .listRowBackground(Color.green)
-    }
-}
 
-#Preview {
-    StatusBar()
+                Spacer()
+
+                ActionStatusCircle(status: statusBarOverrideStatus)
+            }
+        }
+        .foregroundColor(.primary)
+    }
 }

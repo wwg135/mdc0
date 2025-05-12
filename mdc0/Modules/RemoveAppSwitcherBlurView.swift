@@ -8,12 +8,12 @@
 import SwiftUI
 import Drops
 
-struct AppSwitcherBlur: View {
+struct RemoveAppSwitcherBlurView: View {
     @State private var appSwitcherBlurStatus: String = ""
     
     var body: some View {
-        VStack(alignment: .leading) {
-            Button("Remove App Switcher Blur", systemImage: "square.stack.fill") {
+        HStack {
+            Button("Apply") {
                 let paths = [
                     "/System/Library/PrivateFrameworks/SpringBoard.framework/homeScreenBackdrop-application.materialrecipe",
                     "/System/Library/PrivateFrameworks/SpringBoard.framework/homeScreenBackdrop-switcher.materialrecipe"
@@ -25,16 +25,14 @@ struct AppSwitcherBlur: View {
                     subtitle: appSwitcherBlurStatus,
                     icon: UIImage(systemName: "square.stack.fill")
                 ))
+                appSwitcherBlurStatus = successCount == paths.count ? "Success" : "Failed"
             }
-            .symbolRenderingMode(.hierarchical)
+            .buttonStyle(.borderedProminent)
 
-            statusRow(label: "App Switcher Blur Status", status: appSwitcherBlurStatus)
+            Spacer()
+
+            ActionStatusCircle(status: appSwitcherBlurStatus)
         }
-        .foregroundColor(.white)
-        .listRowBackground(Color.indigo)
+        .foregroundColor(.primary)
     }
-}
-
-#Preview {
-    AppSwitcherBlur()
 }
