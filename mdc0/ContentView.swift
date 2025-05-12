@@ -8,11 +8,12 @@
 import SwiftUI
 import Drops
 import notify
-import CoreLocation 
+import CoreLocation
 
 struct ContentView: View {
     @State private var locationManager = CLLocationManager()
     @AppStorage("enableLocationServices") private var enableLocationServices = false
+    @StateObject private var githubUpdater = GitHubUpdater()
 
     var body: some View {
         NavigationView {
@@ -33,14 +34,29 @@ struct ContentView: View {
             .navigationTitle("mdc0")
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
-                    Toggle("Background Keep", isOn: $enableLocationServices)
-                        .onChange(of: enableLocationServices) { _ in
-                            if enableLocationServices {
-                                locationManager.requestWhenInUseAuthorization()
-                                locationManager.requestAlwaysAuthorization()
-                            }
-                            terminateApp()
+                    Button(action: {
+                        enableLocationServices.toggle()
+                        if enableLocationServices {
+                            locationManager.requestWhenInUseAuthorization()
+                            locationManager.requestAlwaysAuthorization()
                         }
+                        terminateApp()
+                    }) {
+                        Image(systemName: enableLocationServices ? "location.fill" : "location")
+                    }
+                }
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button(action: {
+                        if let url = URL(string: "respring://") {
+                            if UIApplication.shared.canOpenURL(url) {
+                                UIApplication.shared.open(url, options: [:], completionHandler: nil)
+                            } else {
+                                fetchAndOpenRespringAssetFromGitHub()
+                            }
+                        }
+                    }) {
+                        Label("Respring", systemImage: "arrow.clockwise.circle")
+                    }
                 }
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button {
@@ -48,11 +64,27 @@ struct ContentView: View {
                     } label: {
                         Image(systemName: "info.circle")
                     }
+                    
                 }
             }
         }
         .navigationViewStyle(.stack)
         .preferredColorScheme(.dark)
+        .onAppear {
+            githubUpdater.checkVersion()
+        }
+        .alert(isPresented: $githubUpdater.showingUpdateAlert) {
+            Alert(
+                title: Text("New Version Available"),
+                message: Text("Version \(githubUpdater.latestVersion ?? "") is available. Do you want to download it?"),
+                primaryButton: .default(Text("Download"), action: {
+                    if let url = githubUpdater.downloadURL {
+                        UIApplication.shared.open(url)
+                    }
+                }),
+                secondaryButton: .cancel(Text("Later"))
+            )
+        }
     }
 }
 

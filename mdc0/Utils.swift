@@ -6,6 +6,8 @@
 //
 
 import Foundation
+import SwiftUI
+import Drops
 
 // Check if the device is running iOS 17 or later
 func isIOS17OrLater() -> Bool {
@@ -93,4 +95,47 @@ func terminateApp() {
     Timer.scheduledTimer(withTimeInterval: 0.2, repeats: false) { _ in
         exit(0)
     }
+}
+
+func fetchAndOpenRespringAssetFromGitHub() {
+    print("Fetching GitHub releases...")
+    guard let url = URL(string: "https://api.github.com/repos/34306/mdc0/releases") else { return }
+
+    let task = URLSession.shared.dataTask(with: url) { data, response, error in
+        guard let data = data, error == nil else {
+            DispatchQueue.main.async {
+                Drops.show(Drop(title: "Error", subtitle: "Network error"))
+            }
+            return
+        }
+
+        do {
+            if let releases = try JSONSerialization.jsonObject(with: data) as? [[String: Any]] {
+                for release in releases {
+                    if let assets = release["assets"] as? [[String: Any]] {
+                        if let respringAsset = assets.first(where: {
+                            ($0["name"] as? String)?.lowercased().contains("respring") == true
+                        }) {
+                            if let downloadUrlString = respringAsset["browser_download_url"] as? String,
+                               let downloadUrl = URL(string: downloadUrlString) {
+                                DispatchQueue.main.async {
+                                    UIApplication.shared.open(downloadUrl)
+                                }
+                                return
+                            }
+                        }
+                    }
+                }
+                DispatchQueue.main.async {
+                    Drops.show(Drop(title: "Error", subtitle: "Respring asset not found in any release."))
+                }
+            }
+        } catch {
+            DispatchQueue.main.async {
+                Drops.show(Drop(title: "Error", subtitle: "Json parse error"))
+            }
+        }
+    }
+
+    task.resume()
 }
