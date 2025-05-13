@@ -2,7 +2,7 @@ name: Build mdc0
 
 on:
   push:
-    branches: [ "**" ]
+    branches: [ "*" ]
 
 jobs:
   build:
