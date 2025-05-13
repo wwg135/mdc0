@@ -10,6 +10,9 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4.2.2
+
+    - name: Grant execute permission
+      run: chmod +x ipabuild.sh
       
     - name: Make IPA
       run: ./ipabuild.sh
